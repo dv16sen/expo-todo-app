@@ -1,12 +1,15 @@
 import React, {Component} from "react";
-import {Button, Text} from "react-native-elements";
+import {Button, Text, Divider} from "react-native-elements";
 import {Screen} from "../styled/Screen";
 import {TextInput} from "../styled/TextInput";
 import colors from "../constants/colors";
 import * as firebase from "firebase";
 import {TextList} from "../styled/TextList";
+import {connect} from "react-redux";
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
+    static mapStateToProps = ({sample}) => ({sample});
+
     state = {
         text: "",
         todo: {},
@@ -42,21 +45,25 @@ export default class HomeScreen extends Component {
     };
 
     render(){
+        console.log(this.props);
+
         return (
             <Screen>
                 <TextInput
                     onChangeText={this.handleTextChange}
                     value={this.state.text}
                     onSubmitEditing={this.handleButtonPress}
+                    placeholder="Click here to add a new todo..."
                 />
                 <Button
                     title="Add Todo"
-                    containerViewStyle={{margin: 0}}
+                    containerViewStyle={{margin: 10}}
                     backgroundColor={colors.primary}
                     onPress={this.handleButtonPress}
                     disabled={this.state.loading}
                     loading={this.state.loading}
                 />
+                <Divider/>
                 <TextList
                     data={Object.values(this.state.todo).reverse()}
                     renderItem={({item, index}) => (
@@ -77,3 +84,5 @@ export default class HomeScreen extends Component {
         );
     }
 }
+
+export default connect(HomeScreen.mapStateToProps)(HomeScreen);
