@@ -3,7 +3,8 @@ import {combineReducers} from "redux";
 
 export const initialState = {
     todo: [],
-    selectedTodo: -1
+    selectedTodo: -1,
+    communicatingWithFirebase: true
 };
 
 export const todo = (state = [], action) => {
@@ -26,7 +27,19 @@ export const selectedTodo = (state = -1, action) => {
     }
 };
 
+export const communicatingWithFirebase = (state = true, action) => {
+    switch(action.type){
+    case constants.START_FIREBASE_COMMUNICATION:
+        return true;
+    case constants.STOP_FIREBASE_COMMUNICATION:
+        return false;
+    default:
+        return state;
+    }
+};
+
 export default combineReducers({
     todo,
-    selectedTodo
+    selectedTodo,
+    communicatingWithFirebase
 });

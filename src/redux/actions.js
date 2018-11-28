@@ -2,7 +2,10 @@ import {constants} from "./constants";
 
 export const updateTodo = (todo) => ({
     type: constants.UPDATE_TODO,
-    payload: Object.values(todo).reverse()
+    payload: Object.keys(todo).map(key => ({
+        key,
+        value: todo[key]
+    })).reverse()
 });
 
 export const selectTodo = (todoIndex) => ({
@@ -11,6 +14,13 @@ export const selectTodo = (todoIndex) => ({
 });
 
 export const deselectTodo = () => ({
-    type: constants.DESELECT_TODO,
-    payload: -1
+    type: constants.DESELECT_TODO
+});
+
+export const startFirebaseCommunication = () => ({
+    type: constants.START_FIREBASE_COMMUNICATION
+});
+
+export const stopFirebaseCommunication = () => ({
+    type: constants.STOP_FIREBASE_COMMUNICATION
 });
