@@ -6,15 +6,14 @@ import colors from "../constants/colors";
 import * as firebase from "firebase";
 import {TextList} from "../styled/TextList";
 import {connect} from "react-redux";
+import {deselectTodo, selectTodo, updateTodo} from "../redux/actions";
 
 class HomeScreen extends Component {
-    static mapStateToProps = ({sample}) => ({sample});
+    static mapStateToProps = ({selectedTodo, todo}) => ({selectedTodo, todo});
 
     state = {
         text: "",
-        todo: {},
-        loading: true,
-        highlight: -1
+        loading: true
     };
 
     componentDidMount(){
@@ -23,8 +22,9 @@ class HomeScreen extends Component {
         firebase.database().ref("/todo").on("value", (snapshot) => {
             const todo = snapshot.val();
 
+            this.props.dispatch(updateTodo((todo) ? todo : {}));
+
             this.setState((prevState) => ({
-                todo: (todo) ? todo : {},
                 loading: (isInitialMount) ? false : prevState.loading
             }), () => {
                 isInitialMount = false;
@@ -45,8 +45,6 @@ class HomeScreen extends Component {
     };
 
     render(){
-        console.log(this.props);
-
         return (
             <Screen>
                 <TextInput
@@ -65,17 +63,19 @@ class HomeScreen extends Component {
                 />
                 <Divider/>
                 <TextList
-                    data={Object.values(this.state.todo).reverse()}
+                    data={this.props.todo}
                     renderItem={({item, index}) => (
                         <Text
                             style={{
                                 padding: 20,
-                                backgroundColor: (this.state.highlight === index) ? "#ddd" : "#fff"
+                                backgroundColor: (this.props.selectedTodo === index) ? "#ddd" : "#fff"
                             }}
                             onPress={() => {
-                                this.setState((prevState) => ({
-                                    highlight: (prevState.highlight === index) ? -1 : index
-                                }));
+                                if(this.props.selectedTodo === index){
+                                    this.props.dispatch(deselectTodo())
+                                } else {
+                                    this.props.dispatch(selectTodo(index));
+                                }
                             }}
                         >{item}</Text>
                     )}

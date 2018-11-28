@@ -2,18 +2,31 @@ import {constants} from "./constants";
 import {combineReducers} from "redux";
 
 export const initialState = {
-    sample: "This is a sample redux state"
+    todo: [],
+    selectedTodo: -1
 };
 
-export const sample = (state = "", action) => {
+export const todo = (state = [], action) => {
     switch(action.type){
-    case constants.SAMPLE_ACTION:
+    case constants.UPDATE_TODO:
         return action.payload;
     default:
         return state;
     }
 };
 
+export const selectedTodo = (state = -1, action) => {
+    switch(action.type){
+    case constants.SELECT_TODO:
+        return action.payload;
+    case constants.DESELECT_TODO:
+        return -1;
+    default:
+        return state;
+    }
+};
+
 export default combineReducers({
-    sample
+    todo,
+    selectedTodo
 });
